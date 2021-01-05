@@ -1,0 +1,45 @@
+version: '3'
+
+services:
+
+  rabbitmq-node-1:
+    image: rabbitmq:3-management
+    container_name: rabbitmq1
+    hostname: rabbitmq1
+    networks:
+     - cluster-network
+    volumes:
+     - $PWD/storage/rabbitmq-node-1:/var/lib/rabbitmq
+    environment:
+     - RABBITMQ_ERLANG_COOKIE=cluster_cookie
+     - RABBITMQ_DEFAULT_USER=admin
+     - RABBITMQ_DEFAULT_PASS=Admin@123  
+  
+  rabbitmq-node-2:
+    image: rabbitmq:3-management
+    container_name: rabbitmq2
+    hostname: rabbitmq2
+    networks:
+      - cluster-network
+    volumes:
+     - $PWD/storage/rabbitmq-node-2:/var/lib/rabbitmq
+    environment:
+     - RABBITMQ_ERLANG_COOKIE=cluster_cookie
+     - RABBITMQ_DEFAULT_USER=admin
+     - RABBITMQ_DEFAULT_PASS=Admin@123
+    
+  haproxy:
+    image: haproxy:1.7
+    networks:
+      - cluster-network
+    volumes:
+      - ./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+    depends_on:
+      - rabbitmq-node-1
+      - rabbitmq-node-2
+    ports:
+      - 15672:15672
+      - 5672:5672
+networks:
+ cluster-network:
+  driver: bridge
