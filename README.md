@@ -15,3 +15,10 @@ Most things will be how you expect:
 * The default username and password are `admin`/`Admin@123`
 * The broker accepts connections on `localhost:5672`
 * The Management interface is found at `localhost:15672`
+
+## Test active passive
+
+* Access rabbitmq Management Interface localhost:15672
+* You see rabbit@rabbitmq1 in nodes list
+* Remove rabbitmq1 container
+* You see node changed to rabbit@rabbitmq2
