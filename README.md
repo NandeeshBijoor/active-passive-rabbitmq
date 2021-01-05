@@ -10,7 +10,7 @@ Starts two instnaces of rabbitmq containers which will work in active-passive mo
 > docker-compose up OR docker-compose up -d (detached mode)
 ```
 
-Most things will be how you expect:
+## Access Rabbitmq
 
 * The default username and password are `admin`/`Admin@123`
 * The broker accepts connections on `localhost:5672`
@@ -18,7 +18,7 @@ Most things will be how you expect:
 
 ## Test active passive
 
-* Access rabbitmq Management Interface localhost:15672
+* Access Rabbitmq Management Interface localhost:15672
 * You see rabbit@rabbitmq1 in nodes list
 * Remove rabbitmq1 container
 * You see node changed to rabbit@rabbitmq2
