@@ -1,4 +1,4 @@
-# Cluster RabbitMQ
+# Active Passive RabbitMQ
 
 Starts two instnaces of rabbitmq containers which will work in active-passive mode
 
