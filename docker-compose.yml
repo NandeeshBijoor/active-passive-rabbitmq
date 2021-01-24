@@ -2,44 +2,41 @@ version: '3'
 
 services:
 
-  rabbitmq-node-1:
+  rabbitmq1:
     image: rabbitmq:3-management
-    container_name: rabbitmq1
     hostname: rabbitmq1
-    networks:
-     - cluster-network
-    volumes:
-     - $PWD/storage/rabbitmq-node-1:/var/lib/rabbitmq
     environment:
-     - RABBITMQ_ERLANG_COOKIE=cluster_cookie
-     - RABBITMQ_DEFAULT_USER=admin
-     - RABBITMQ_DEFAULT_PASS=Admin@123  
-  
-  rabbitmq-node-2:
+      - RABBITMQ_NODENAME=rabbit@rabbitmq1
+      - RABBITMQ_ERLANG_COOKIE=${RABBITMQ_ERLANG_COOKIE}
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
+      - RABBITMQ_DEFAULT_VHOST=${RABBITMQ_DEFAULT_VHOST}
+
+  rabbitmq2:
     image: rabbitmq:3-management
-    container_name: rabbitmq2
     hostname: rabbitmq2
-    networks:
-      - cluster-network
-    volumes:
-     - $PWD/storage/rabbitmq-node-2:/var/lib/rabbitmq
+    depends_on:
+      - rabbitmq1
     environment:
-     - RABBITMQ_ERLANG_COOKIE=cluster_cookie
-     - RABBITMQ_DEFAULT_USER=admin
-     - RABBITMQ_DEFAULT_PASS=Admin@123
+      - CLUSTERED=true #not being used
+      - CLUSTER_WITH=rabbitmq1 #not being used
+      - RABBITMQ_NODENAME=rabbit@rabbitmq2
+      - RABBITMQ_ERLANG_COOKIE=${RABBITMQ_ERLANG_COOKIE}
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
+      - RABBITMQ_DEFAULT_VHOST=${RABBITMQ_DEFAULT_VHOST}
+    #volumes:
+      #- ./docker-entrypoint.sh:/usr/local/bin/docker-entrypoint.sh
+    #entrypoint: bash -c ./docker-entrypoint.sh 
     
   haproxy:
     image: haproxy:1.7
-    networks:
-      - cluster-network
     volumes:
       - ./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+      - ./certificate/haproxy.pem:/usr/local/etc/certificate/haproxy.pem:ro
     depends_on:
-      - rabbitmq-node-1
-      - rabbitmq-node-2
+      - rabbitmq1
+      - rabbitmq2
     ports:
       - 15672:15672
       - 5672:5672
-networks:
- cluster-network:
-  driver: bridge
