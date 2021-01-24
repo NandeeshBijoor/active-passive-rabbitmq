@@ -19,8 +19,15 @@ docker exec -it active-passive-rabbitmq_rabbitmq2_1 sh -c "rabbitmqctl stop_app 
 ## Check cluster status
 docker exec -it active-passive-rabbitmq_rabbitmq1_1 rabbitmqctl cluster_status
 
-Most things will be how you expect:
+## Access Rabbitmq
 
 * The default username and password are `guest`/`guest`(Can be overriden through .env file)
 * The broker accepts connections on `localhost:5672`
 * The Management interface is found at `localhost:15672`
+
+## Test active passive
+
+* Access Rabbitmq Management Interface https://localhost:15672
+* You see rabbit@rabbitmq1 in nodes list
+* Remove rabbitmq1 container
+* You see node changed to rabbit@rabbitmq2
