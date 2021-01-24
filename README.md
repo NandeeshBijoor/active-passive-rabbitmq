@@ -23,4 +23,3 @@ Create a certificate(haproxy.pem) and keep it inside certificate folder
 * Rabbitmq Management Interface https://localhost:15672
 * The default username and password are `guest`/`guest`(Can be overriden through .env file)
 * The broker accepts connections on `localhost:5672`
-* The Management interface is found at `localhost:15672`
